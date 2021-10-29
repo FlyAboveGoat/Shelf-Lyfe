@@ -377,7 +377,7 @@ export default class Main extends Component {
                     <View style={{flexDirection:'row'}}>
                         <View style={{backgroundColor:'blue'}}>
                             <Text style={{textAlign:'center', textAlignVertical:'bottom'}}>
-                                Expiry Date is:
+                                Expiry Date:
                             </Text>
                         </View>
                         <View style={{backgroundColor:'red'}}>

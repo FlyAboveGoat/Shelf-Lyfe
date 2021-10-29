@@ -119,7 +119,7 @@ export default class Login extends Component {
                     <TouchableOpacity  
                         onPress={() =>{this.InsertRecord()}}
                         activeOpacity={0.8}>
-                        <Text>Login test</Text>
+                        <Text>Login</Text>
                     </TouchableOpacity>
                 </View>
             </View>
