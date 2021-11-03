@@ -25,6 +25,7 @@ export default class Main extends Component {
             PushDate:'',        //Unix time to be pushed to the db
             IsAdding:false,
             statusColor:[],          
+            expiredColor:[],
         };
     }
     
@@ -151,16 +152,56 @@ export default class Main extends Component {
                     //console.log(Item[i]);
                     //console.log(Date[i]);
                     var answer = moment.unix(this.state.Date[i]/1000).endOf('minute').fromNow().replace(/[^A-Za-z]/g, '');
-                    var num = moment.unix(this.state.Date[i]/1000).endOf('minute').fromNow().replace(/[^0-9]/g,'');
-                    if (answer== "afewsecondsago" || answer == "minutesago" || answer== "aminuteago" || answer== "hoursago" || answer== "anhourago" || answer=="daysago" || answer=="adayago"){
+                    var num = parseFloat(moment.unix(this.state.Date[i]/1000).endOf('minute').fromNow().replace(/[^0-9]/g,''));
+                    if (answer== "afewsecondsago" || answer == "minutesago" || answer== "aminuteago" || answer== "hoursago" || answer== "anhourago" || answer=="daysago" || answer=="adayago" || answer=='amonthago' ||answer=='monthsago' ||answer=="ayearago"||answer=="yearsago"){
                         console.log("Item" + i + "expired");
                         let statusColor = this.state.statusColor;
                         let statusColors = statusColor[i];
-                        statusColors = "red";
+                        statusColors = '#b4b4b6';
                         statusColor[i] = statusColors;
-                        this.setState({statusColors});
+
+                        let expiredColor = this.state.expiredColor;
+                        let expiredColors = expiredColor[i];
+                        expiredColors = "red";
+                        expiredColor[i] = expiredColors;
+                        this.setState({statusColors, expiredColor});
+                    }else if((num<=5 && answer=='indays')||answer=='inaday'||answer=='inhours'||answer=='inanhour'||answer=='inminutes'||answer=='inaminute'){
+                        console.log('Item ' + i + 'less than 5 days')
+                        let statusColor = this.state.statusColor;
+                        let statusColors = statusColor[i];
+                        statusColors = '#f73640';
+                        statusColor[i] = statusColors;
+
+                        let expiredColor = this.state.expiredColor;
+                        let expiredColors = expiredColor[i];
+                        expiredColors = "black";
+                        expiredColor[i] = expiredColors;
+                        this.setState({statusColors, expiredColor});
+                    }else if(num<=20 && answer=='indays'){
+                        let statusColor = this.state.statusColor;
+                        let statusColors = statusColor[i];
+                        statusColors = '#ff9933';
+                        statusColor[i] = statusColors;
+
+                        let expiredColor = this.state.expiredColor;
+                        let expiredColors = expiredColor[i];
+                        expiredColors = "black";
+                        expiredColor[i] = expiredColors;
+                        this.setState({statusColors, expiredColor});
                     }
-                    
+                    else{
+                        let statusColor = this.state.statusColor;
+                        let statusColors = statusColor[i];
+                        statusColors = '#66ff33';
+                        statusColor[i] = statusColors;
+
+                        let expiredColor = this.state.expiredColor;
+                        let expiredColors = expiredColor[i];
+                        expiredColors = "black";
+                        expiredColor[i] = expiredColors;
+                        this.setState({statusColors, expiredColor});
+                    }
+                    console.log('type of num ' + typeof(num));
                     console.log(answer);
                 });
             }
@@ -327,14 +368,28 @@ export default class Main extends Component {
                 <View style={{flexDirection:'column', alignItems:'center'}}>
                     
                     <View style={styles.ItemBox}>
-                        <View>                          
-                                <Text>{i+1} {this.state.Item[i]}</Text>
-                        </View>
-                        <View>
-                            <Text>Expired Date: {moment.unix(this.state.Date[i]/1000).format('MMMM Do YYYY, h:mm a')}   </Text>
-                        </View>
-                        <View>
-                            <Text style={{color:this.state.statusColor[i]}}>Expired {moment.unix(this.state.Date[i]/1000).endOf('minute').fromNow()}</Text>
+                        <View style={{flexDirection:'row'}}>
+                            <View style={{flex:5, flexDirection:'column'}}>
+                                <View>                          
+                                        <Text>{i+1} {this.state.Item[i]}</Text>
+                                </View>
+                                <View>
+                                    <Text>Expired Date: {moment.unix(this.state.Date[i]/1000).format('MMMM Do YYYY, h:mm a')}   </Text>
+                                </View>
+                                <View>
+                                    <Text style={{color:this.state.expiredColor[i]}}>Expired {moment.unix(this.state.Date[i]/1000).endOf('minute').fromNow()}</Text>
+                                </View>
+                            </View>
+                            <View style={{flex:1, flexDirection:'column', justifyContent:'center'}}>
+                                <View style={{backgroundColor:this.state.statusColor[i], 
+                                height:Dimensions.get("screen").width*0.09, 
+                                width:Dimensions.get("screen").width*0.09,
+                                alignSelf:'center',
+                                borderRadius:100,
+                                borderWidth:1}}>
+
+                                </View>
+                            </View>
                         </View>
                         <View style={{alignSelf:'flex-end', marginRight:2}}>
                             <TouchableOpacity  
@@ -426,7 +481,7 @@ const styles = StyleSheet.create({
         flexDirection:'column', 
         height:Dimensions.get("screen").height*0.12, 
         width:Dimensions.get("screen").width*0.99, 
-        backgroundColor:'#a2a2e7',
+        
         borderRadius:5,
         borderColor:'black',
         borderWidth:1,
