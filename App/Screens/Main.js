@@ -1,9 +1,10 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React, {Component} from 'react';
-import { Alert, StyleSheet, Text, TextInput, View, Image, SnapshotViewIOS, Dimensions, StatusBar, Platform, ScrollView, Button, TouchableOpacity } from 'react-native';
+import { Alert, StyleSheet, Text, TextInput, View, Image, ImageBackground, SnapshotViewIOS, Dimensions, StatusBar, Platform, ScrollView, Button, TouchableOpacity } from 'react-native';
 import { TabRouter } from 'react-navigation';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
+import { BlurView } from 'expo-blur';
 
 
 
@@ -26,6 +27,8 @@ export default class Main extends Component {
             IsAdding:false,
             statusColor:[],          
             expiredColor:[],
+            boxColor:[],
+            DisplayTime:'',
         };
     }
     
@@ -157,14 +160,19 @@ export default class Main extends Component {
                         console.log("Item" + i + "expired");
                         let statusColor = this.state.statusColor;
                         let statusColors = statusColor[i];
-                        statusColors = '#b4b4b6';
+                        statusColors = '';
                         statusColor[i] = statusColors;
+                        
+                        let boxColor = this.state.boxColor;
+                        let boxColors = boxColor[i];
+                        boxColors = '#b4b4b6';
+                        boxColor[i] = boxColors;
 
                         let expiredColor = this.state.expiredColor;
                         let expiredColors = expiredColor[i];
                         expiredColors = "red";
                         expiredColor[i] = expiredColors;
-                        this.setState({statusColors, expiredColor});
+                        this.setState({statusColors, boxColors, expiredColor});
                     }else if((num<=5 && answer=='indays')||answer=='inaday'||answer=='inhours'||answer=='inanhour'||answer=='inminutes'||answer=='inaminute'){
                         console.log('Item ' + i + 'less than 5 days')
                         let statusColor = this.state.statusColor;
@@ -172,22 +180,32 @@ export default class Main extends Component {
                         statusColors = '#f73640';
                         statusColor[i] = statusColors;
 
+                        let boxColor = this.state.boxColor;
+                        let boxColors = boxColor[i];
+                        boxColors = 'white';
+                        boxColor[i] = boxColors;
+
                         let expiredColor = this.state.expiredColor;
                         let expiredColors = expiredColor[i];
                         expiredColors = "black";
                         expiredColor[i] = expiredColors;
-                        this.setState({statusColors, expiredColor});
+                        this.setState({statusColors, boxColors, expiredColor});
                     }else if(num<=20 && answer=='indays'){
                         let statusColor = this.state.statusColor;
                         let statusColors = statusColor[i];
                         statusColors = '#ff9933';
                         statusColor[i] = statusColors;
 
+                        let boxColor = this.state.boxColor;
+                        let boxColors = boxColor[i];
+                        boxColors = 'white';
+                        boxColor[i] = boxColors;
+
                         let expiredColor = this.state.expiredColor;
                         let expiredColors = expiredColor[i];
                         expiredColors = "black";
                         expiredColor[i] = expiredColors;
-                        this.setState({statusColors, expiredColor});
+                        this.setState({statusColors, boxColors, expiredColor});
                     }
                     else{
                         let statusColor = this.state.statusColor;
@@ -195,11 +213,16 @@ export default class Main extends Component {
                         statusColors = '#66ff33';
                         statusColor[i] = statusColors;
 
+                        let boxColor = this.state.boxColor;
+                        let boxColors = boxColor[i];
+                        boxColors = 'white';
+                        boxColor[i] = boxColors;
+
                         let expiredColor = this.state.expiredColor;
                         let expiredColors = expiredColor[i];
                         expiredColors = "black";
                         expiredColor[i] = expiredColors;
-                        this.setState({statusColors, expiredColor});
+                        this.setState({statusColors, boxColors, expiredColor});
                     }
                     console.log('type of num ' + typeof(num));
                     console.log(answer);
@@ -285,6 +308,7 @@ export default class Main extends Component {
         console.log('Unix: ' + ts);
         var converted_hours = moment(selectedDate).format('MMMM Do YYYY, h:mm a');
         console.log(converted_hours);
+        this.setState({DisplayTime:converted_hours})
         //var unix=selectedDate+1;
         //console.log(unix);
       };
@@ -367,7 +391,7 @@ export default class Main extends Component {
             RecordShown.push(        
                 <View style={{flexDirection:'column', alignItems:'center'}}>
                     
-                    <View style={styles.ItemBox}>
+                    <View style={[styles.ItemBox,{backgroundColor:this.state.boxColor[i]}]}>
                         <View style={{flexDirection:'row'}}>
                             <View style={{flex:5, flexDirection:'column'}}>
                                 <View>                          
@@ -412,63 +436,90 @@ export default class Main extends Component {
         return (
             <ScrollView style={{backgroundColor: "white"}}>
                 <View style={{paddingTop: Platform.OS === "android"? StatusBar.currentHeight :0}}>
-                    <View>
-                        <Text style={{fontSize:Dimensions.get("screen").width*0.1, textAlign: 'center'}}>Shelf Lyfe</Text>
+                    <View style={{flexDirection:'row', width:Dimensions.get("screen").width, justifyContent:'flex-start'}}>       
+                            <Image source={require("../../assets/logo.png")} style={styles.logo}/>         
                     </View>
-                    <View style={{flexDirection:'row'}}>
-                        <View style={{backgroundColor:'blue'}}>
-                            <Text style={{textAlign:'center', textAlignVertical:'bottom'}}>
-                                Itemname: 
-                            </Text>
+                    <ImageBackground source={require("../../assets/FoodBackground.jpg")} style={styles.BackgroundImage}>
+                    <BlurView intensity={50} tint="dark" style={styles.blurContainer}>
+                    <View style={styles.AddBox}>
+                        <View style={{flexDirection:'row', marginTop:2}}>
+                            <View style={{flexDirection:'column', flex:3.5}}>
+                                <View style={{flexDirection:'row'}}>
+                                    <View style={{flex:1, backgroundColor:'', justifyContent:'center', marginLeft:3}}>
+                                        <Text style={{fontSize:Dimensions.get("screen").width*0.045}}>
+                                            Itemname: 
+                                        </Text>
+                                    </View>
+                                    <View style={{backgroundColor:'', flex:2, borderWidth:1, borderRadius:5, marginLeft:2}}>
+                                        <TextInput
+                                            placeholder={'Type the item\'s name here'}
+                                            placeholderTextColor={'black'}
+                                            onChangeText={ItemName=>this.setState({ItemName})}
+                                        />
+                                    </View>
+                                </View>
+                                <View style={{flexDirection:'row', marginTop:3}}>
+                                    <View style={{flex:1, backgroundColor:'', marginLeft:3, justifyContent:'center'}}>
+                                        <Text style={{fontSize:Dimensions.get("screen").width*0.04}}>
+                                            Expired Date: 
+                                        </Text>
+                                    </View>
+                                    <View style={{flex:2, justifyContent:'center', backgroundColor:''}}>
+                                        <Text style={{fontSize:Dimensions.get("screen").width*0.035}}>
+                                            {this.state.DisplayTime}
+                                        </Text>
+                                    </View>
+                                </View>
+                            </View>
+                           
+                            <View style={{flex:1, backgroundColor:'', alignItems:'center', alignSelf:'center'}}>
+                                <TouchableOpacity  
+                                    onPress={() =>{this.ConfirmingDelete(i)}}
+                                    activeOpacity={0.8}
+                                    style={[styles.Button, {backgroundColor:'#66ff99'}]}>
+                                        <Text style={styles.ButtonText}>
+                                            Add
+                                        </Text>
+                                </TouchableOpacity>
+                            </View>                       
                         </View>
-                        <View style={{backgroundColor:'red'}}>
-                            <TextInput
-                                placeholder={''}
-                                placeholderTextColor={'black'}
-                                onChangeText={ItemName=>this.setState({ItemName})}
-                            />
+                        <View style={{flexDirection:'row', borderTopWidth:1,marginTop:3, paddingTop:5}}>
+                            <View>
+                                <Text> Select the expired date and time:  </Text>
+                            </View>
+                            <View style={{flexDirection:'row', justifyContent:'space-evenly', flex:1, marginBottom:4}}>
+                                <View style={styles.TimePicker}>
+                                    <TouchableOpacity  onPress={this.showDatepicker}>
+                                        <Text style={{color:'white'}}>
+                                            Date
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.TimePicker}>
+                                    <TouchableOpacity  onPress={this.showTimepicker}>
+                                        <Text style={{color:'white'}}>
+                                            Time
+                                        </Text>                
+                                    </TouchableOpacity>
+                                </View>
+                                {this.state.show && (
+                                    <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={this.state.date}
+                                    mode={this.state.mode}
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={this.onChange}
+                                    />
+                                )}
+                            </View>
                         </View>
-                    </View>
-                    <View style={{flexDirection:'row'}}>
-                        <View style={{backgroundColor:'blue'}}>
-                            <Text style={{textAlign:'center', textAlignVertical:'bottom'}}>
-                                Expiry Date:
-                            </Text>
-                        </View>
-                        <View style={{backgroundColor:'red'}}>
-                            <TextInput
-                                placeholder={''}
-                                placeholderTextColor={'black'}
-                                onChangeText={Password=>this.setState({Password})}
-                            />
-                        </View>
-                    </View>
-                    <View>
-                        <View>
-                            <Button onPress={this.showDatepicker} title="Show date picker!" />
-                        </View>
-                        <View>
-                            <Button onPress={this.showTimepicker} title="Show time picker!" />
-                        </View>
-                        {this.state.show && (
-                            <DateTimePicker
-                            testID="dateTimePicker"
-                            value={this.state.date}
-                            mode={this.state.mode}
-                            is24Hour={true}
-                            display="default"
-                            onChange={this.onChange}
-                            />
-                        )}
-                    </View>
-                    <View>
-                        <TouchableOpacity  
-                            onPress={() =>{this.AddRecord()}}
-                            activeOpacity={0.8}>
-                            <Text>Add</Text>
-                        </TouchableOpacity>
+                        
                     </View>
                     {RecordShown}
+                    </BlurView>
+                    </ImageBackground>
+                    
                                  
                 </View>
             </ScrollView>
@@ -480,12 +531,11 @@ const styles = StyleSheet.create({
     ItemBox: {
         flexDirection:'column', 
         height:Dimensions.get("screen").height*0.12, 
-        width:Dimensions.get("screen").width*0.99, 
-        
+        width:Dimensions.get("screen").width*0.98, 
         borderRadius:5,
         borderColor:'black',
         borderWidth:1,
-        marginBottom:2
+        marginBottom:5
     },
     Button: {
         height:Dimensions.get("screen").height*0.04, 
@@ -498,8 +548,36 @@ const styles = StyleSheet.create({
         fontSize:Dimensions.get("screen").width*0.04, 
         textAlign:'center', 
         textAlignVertical:'center',
-       
-    }
+    },
+    logo:{
+        backgroundColor:'white',
+        height:Dimensions.get("screen").height*0.065,
+        width:Dimensions.get("screen").width*0.5,
+        resizeMode:'center',
+    },
+    TimePicker:{
+        width:Dimensions.get("screen").width*0.2,
+        height:Dimensions.get("screen").height*0.03,
+        borderRadius:5,
+        backgroundColor:'#33bbff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    AddBox:{
+        flexDirection:'column',
+        borderTopWidth:1,
+        borderBottomWidth:1,
+        marginBottom:4,
+        backgroundColor:'#e6fff7'
+    },
+    BackgroundImage:{
+        height:Dimensions.get("screen").height,
+    },
+    blurContainer: {
+        flex: 1,
+        //padding: 20,
+        //justifyContent: 'center',
+    },
   });
 
 /*
