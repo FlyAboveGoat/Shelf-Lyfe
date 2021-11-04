@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, TextInput, View, Image, SnapshotViewIOS, Dimensions, StatusBar, Platform, ScrollView, Button, TouchableOpacity } from 'react-native';
-
+import { StyleSheet, Text, TextInput, View, Image,  ImageBackground,SnapshotViewIOS, Dimensions, StatusBar, Platform, ScrollView, Button, TouchableOpacity } from 'react-native';
+import { BlurView } from 'expo-blur';
 
 export default class Login extends Component {
     constructor(props) {
@@ -83,44 +83,78 @@ export default class Login extends Component {
     
     render() {
         return (
-            <View style={{paddingTop: Platform.OS === "android"? StatusBar.currentHeight :0}}>
-                <View>
-                    <Text style={{fontSize:Dimensions.get("screen").width*0.1, textAlign: 'center'}}>Login</Text>
-                </View>
-                <View style={{flexDirection:'row'}}>
-                    <View style={{backgroundColor:'blue'}}>
-                        <Text style={{textAlign:'center', textAlignVertical:'bottom'}}>
-                            Username:
-                        </Text>
+            <View>
+                <ImageBackground source={require("../../assets/FoodBackground.jpg")} style={styles.BackgroundImage}>
+                    <BlurView intensity={50} tint="dark" style={styles.blurContainer}>
+                    </BlurView>
+                </ImageBackground>
+            
+                <View style={{paddingTop: Platform.OS === "android"? StatusBar.currentHeight :0, 
+                flexDirection:'column'}}>
+                    <View style={{flexDirection:'row', 
+                        width:Dimensions.get("screen").width, 
+                        justifyContent:'flex-start', 
+                        backgroundColor:'white', 
+                        position:'absolute',
+                        paddingTop: Platform.OS === "android"? StatusBar.currentHeight :0
+                        }}>       
+                                <Image source={require("../../assets/logo.png")} style={styles.logo}/>         
                     </View>
-                    <View style={{backgroundColor:'red'}}>
-                        <TextInput
-                            placeholder={''}
-                            placeholderTextColor={'black'}
-                            onChangeText={FindUsername=>this.setState({FindUsername})}
-                        />
+                    
+                    <View style={{
+                            flexDirection:'column',
+                            paddingTop: Platform.OS === "android"? StatusBar.currentHeight : 0, 
+                            minHeight:Dimensions.get("screen").height,
+                            justifyContent: 'center',
+                            alignItems:'center',
+                            backgroundColor:''}}>
+                        <View style={{
+                            flexDirection:'column',
+                            justifyContent:'center',
+                            backgroundColor:'white',
+                            height:Dimensions.get("screen").height*0.1,
+                            width:Dimensions.get("screen").width*0.9,
+                            borderWidth:1,
+                            borderRadius:15
+                        }}>
+                            <View style={{flexDirection:'row'}}>
+                                <View style={{backgroundColor:'', flex:1, justifyContent:'center'}}>
+                                    <Text style={{textAlign:'center', textAlignVertical:'center'}}>
+                                        Username:
+                                    </Text>
+                                </View>
+                                <View style={{backgroundColor:'', flex:3, borderWidth:1, marginRight:2, borderRadius:6}}>
+                                    <TextInput
+                                        placeholder={'Type your username here'}
+                                        placeholderTextColor={'black'}
+                                        onChangeText={FindUsername=>this.setState({FindUsername})}
+                                    />
+                                </View>
+                            </View>
+                            <View style={{flexDirection:'row'}}>
+                                <View style={{backgroundColor:'', flex:1, justifyContent:'center'}}>
+                                    <Text style={{textAlign:'center', textAlignVertical:'bottom'}}>
+                                        Password:
+                                    </Text>
+                                </View>
+                                <View style={{backgroundColor:'', flex:3, borderWidth:1, marginRight:2, borderRadius:6}}>
+                                    <TextInput
+                                        placeholder={'Type your password here'}
+                                        placeholderTextColor={'black'}
+                                        onChangeText={FindPassword=>this.setState({FindPassword})}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                        <View style={styles.ButtonBox}>
+                                <TouchableOpacity  
+                                    onPress={() =>{this.InsertRecord()}}
+                                    activeOpacity={0.8}
+                                    style={styles.Button}>
+                                    <Text style={styles.ButtonText}>Login</Text>
+                                </TouchableOpacity>
+                            </View>
                     </View>
-                </View>
-                <View style={{flexDirection:'row'}}>
-                    <View style={{backgroundColor:'blue'}}>
-                        <Text style={{textAlign:'center', textAlignVertical:'bottom'}}>
-                            Password:
-                        </Text>
-                    </View>
-                    <View style={{backgroundColor:'red'}}>
-                        <TextInput
-                            placeholder={''}
-                            placeholderTextColor={'black'}
-                            onChangeText={FindPassword=>this.setState({FindPassword})}
-                        />
-                    </View>
-                </View>
-                <View>
-                    <TouchableOpacity  
-                        onPress={() =>{this.InsertRecord()}}
-                        activeOpacity={0.8}>
-                        <Text>Login</Text>
-                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -128,16 +162,45 @@ export default class Login extends Component {
 }
 
 const styles = StyleSheet.create({
-    Button: {
-        backgroundColor:'green',
-        height:Dimensions.get("screen").height*0.055, 
-        width:Dimensions.get("screen").width*0.4, 
-        borderWidth:1, borderRadius:10, 
-        backgroundColor:'#ace8c4'
-    },
-    ButtonText: {
-        fontSize:Dimensions.get("screen").width*0.075, 
-        textAlign:'center', 
-        textAlignVertical:'center'
-    }
+    ButtonBox: {
+        //flex: 1,
+        //width:Dimensions.get("screen").width*0.7,
+        //backgroundColor: 'blue',
+        alignItems:'flex-end',
+        justifyContent: 'center',
+        height:Dimensions.get("screen").height*0.05,
+      },
+  
+      Button: {
+          height:Dimensions.get("screen").height*0.04, 
+          width:Dimensions.get("screen").width*0.3, 
+          borderWidth:1,
+          borderRadius:10, 
+          backgroundColor:'#ebfff2',
+          marginRight:5
+      },
+      ButtonText: {
+          fontSize:Dimensions.get("screen").width*0.05, 
+          textAlign:'center', 
+          textAlignVertical:'center'
+      },
+      BackgroundImage:{
+          height:Dimensions.get("screen").height,
+          position:'absolute',
+          top:Platform.OS === "android"? StatusBar.currentHeight :0,
+          left:0,
+          right:0,
+          bottom:0
+      },
+      blurContainer: {
+          flex: 1,
+          //padding: 20,
+          //justifyContent: 'center',
+      },
+      logo:{
+          backgroundColor:'white',
+          height:Dimensions.get("screen").height*0.065,
+          width:Dimensions.get("screen").width*0.5,
+          resizeMode:'center',
+      }
   });

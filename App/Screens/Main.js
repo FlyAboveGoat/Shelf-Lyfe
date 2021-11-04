@@ -388,14 +388,17 @@ export default class Main extends Component {
         var RecordShown =[];
         for(let i =0;i<this.state.NumberofItem;i++){
             //if(moment.unix(this.state.Date[i]/1000).endOf('minute').fromNow())
+            //console.log('Item '+ i + ' displayed')
             RecordShown.push(        
                 <View style={{flexDirection:'column', alignItems:'center'}}>
                     
                     <View style={[styles.ItemBox,{backgroundColor:this.state.boxColor[i]}]}>
                         <View style={{flexDirection:'row'}}>
-                            <View style={{flex:5, flexDirection:'column'}}>
+                            <View style={{flex:5, flexDirection:'column', marginLeft:3}}>
                                 <View>                          
-                                        <Text>{i+1} {this.state.Item[i]}</Text>
+                                        <Text style={{fontWeight:'bold', fontSize:Dimensions.get("screen").width*0.04}}>
+                                            {this.state.Item[i]}
+                                        </Text>
                                 </View>
                                 <View>
                                     <Text>Expired Date: {moment.unix(this.state.Date[i]/1000).format('MMMM Do YYYY, h:mm a')}   </Text>
@@ -434,95 +437,108 @@ export default class Main extends Component {
 
         //var date = this.state.date;
         return (
-            <ScrollView style={{backgroundColor: "white"}}>
-                <View style={{paddingTop: Platform.OS === "android"? StatusBar.currentHeight :0}}>
-                    <View style={{flexDirection:'row', width:Dimensions.get("screen").width, justifyContent:'flex-start'}}>       
-                            <Image source={require("../../assets/logo.png")} style={styles.logo}/>         
-                    </View>
-                    <ImageBackground source={require("../../assets/FoodBackground.jpg")} style={styles.BackgroundImage}>
+            <View style={{paddingTop: Platform.OS === "android"? StatusBar.currentHeight :0}}>
+                <ImageBackground source={require("../../assets/FoodBackground.jpg")} style={styles.BackgroundImage}>
                     <BlurView intensity={50} tint="dark" style={styles.blurContainer}>
-                    <View style={styles.AddBox}>
-                        <View style={{flexDirection:'row', marginTop:2}}>
-                            <View style={{flexDirection:'column', flex:3.5}}>
-                                <View style={{flexDirection:'row'}}>
-                                    <View style={{flex:1, backgroundColor:'', justifyContent:'center', marginLeft:3}}>
-                                        <Text style={{fontSize:Dimensions.get("screen").width*0.045}}>
-                                            Itemname: 
-                                        </Text>
-                                    </View>
-                                    <View style={{backgroundColor:'', flex:2, borderWidth:1, borderRadius:5, marginLeft:2}}>
-                                        <TextInput
-                                            placeholder={'Type the item\'s name here'}
-                                            placeholderTextColor={'black'}
-                                            onChangeText={ItemName=>this.setState({ItemName})}
-                                        />
-                                    </View>
-                                </View>
-                                <View style={{flexDirection:'row', marginTop:3}}>
-                                    <View style={{flex:1, backgroundColor:'', marginLeft:3, justifyContent:'center'}}>
-                                        <Text style={{fontSize:Dimensions.get("screen").width*0.04}}>
-                                            Expired Date: 
-                                        </Text>
-                                    </View>
-                                    <View style={{flex:2, justifyContent:'center', backgroundColor:''}}>
-                                        <Text style={{fontSize:Dimensions.get("screen").width*0.035}}>
-                                            {this.state.DisplayTime}
-                                        </Text>
-                                    </View>
-                                </View>
-                            </View>
-                           
-                            <View style={{flex:1, backgroundColor:'', alignItems:'center', alignSelf:'center'}}>
-                                <TouchableOpacity  
-                                    onPress={() =>{this.ConfirmingDelete(i)}}
-                                    activeOpacity={0.8}
-                                    style={[styles.Button, {backgroundColor:'#66ff99'}]}>
-                                        <Text style={styles.ButtonText}>
-                                            Add
-                                        </Text>
-                                </TouchableOpacity>
-                            </View>                       
-                        </View>
-                        <View style={{flexDirection:'row', borderTopWidth:1,marginTop:3, paddingTop:5}}>
-                            <View>
-                                <Text> Select the expired date and time:  </Text>
-                            </View>
-                            <View style={{flexDirection:'row', justifyContent:'space-evenly', flex:1, marginBottom:4}}>
-                                <View style={styles.TimePicker}>
-                                    <TouchableOpacity  onPress={this.showDatepicker}>
-                                        <Text style={{color:'white'}}>
-                                            Date
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={styles.TimePicker}>
-                                    <TouchableOpacity  onPress={this.showTimepicker}>
-                                        <Text style={{color:'white'}}>
-                                            Time
-                                        </Text>                
-                                    </TouchableOpacity>
-                                </View>
-                                {this.state.show && (
-                                    <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={this.state.date}
-                                    mode={this.state.mode}
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={this.onChange}
-                                    />
-                                )}
-                            </View>
+                    </BlurView>  
+                </ImageBackground>
+                <ScrollView style={{backgroundColor:'#00000000'}}>
+                    <View>
+                        <View style={{flexDirection:'row', width:Dimensions.get("screen").width, justifyContent:'flex-start', backgroundColor:'white'}}>       
+                                <Image source={require("../../assets/logo.png")} style={styles.logo}/>         
                         </View>
                         
-                    </View>
-                    {RecordShown}
-                    </BlurView>
-                    </ImageBackground>
+                        <View style={styles.AddBox}>
+                            <View>
+                                <Text style={{fontWeight:'bold', fontSize:Dimensions.get("screen").width*0.04, marginLeft:3}}>
+                                    Add a new item here
+                                </Text>
+                            </View>
+                            <View style={{flexDirection:'row', marginTop:2}}>
+                                <View style={{flexDirection:'column', flex:3.5}}>
+                                    <View style={{flexDirection:'row'}}>
+                                        <View style={{flex:1, backgroundColor:'', justifyContent:'center', marginLeft:3}}>
+                                            <Text style={{fontSize:Dimensions.get("screen").width*0.045}}>
+                                                Itemname: 
+                                            </Text>
+                                        </View>
+                                        <View style={{backgroundColor:'', flex:2, borderWidth:1, borderRadius:5, marginLeft:2}}>
+                                            <TextInput
+                                                placeholder={'Type the item\'s name here'}
+                                                placeholderTextColor={'black'}
+                                                onChangeText={ItemName=>this.setState({ItemName})}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View style={{flexDirection:'row', marginTop:3}}>
+                                        <View style={{flex:1, backgroundColor:'', marginLeft:3, justifyContent:'center'}}>
+                                            <Text style={{fontSize:Dimensions.get("screen").width*0.04}}>
+                                                Expired Date: 
+                                            </Text>
+                                        </View>
+                                        <View style={{flex:2, justifyContent:'center', backgroundColor:''}}>
+                                            <Text style={{fontSize:Dimensions.get("screen").width*0.035}}>
+                                                {this.state.DisplayTime}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                </View>
+                            
+                                <View style={{flex:1, backgroundColor:'', alignItems:'center', alignSelf:'center'}}>
+                                    <TouchableOpacity  
+                                        onPress={() =>{this.AddRecord()}}
+                                        activeOpacity={0.8}
+                                        style={[styles.Button, 
+                                        {backgroundColor:'#66ff99', 
+                                        height:Dimensions.get("screen").height*0.05, 
+                                        width:Dimensions.get("screen").width*0.13,
+                                        borderRadius:150,
+                                        }]}>
+                                            <Text style={[styles.ButtonText, {fontWeight:'bold', color:''}]}>
+                                                Add
+                                            </Text>
+                                    </TouchableOpacity>
+                                </View>                       
+                            </View>
+                            <View style={{flexDirection:'row', borderTopWidth:1,marginTop:3, paddingTop:5, backgroundColor:'#b3ffff'}}>
+                                <View>
+                                    <Text> Select the expired date and time:  </Text>
+                                </View>
+                                <View style={{flexDirection:'row', justifyContent:'space-evenly', flex:1, marginBottom:4}}>
+                                    <View style={styles.TimePicker}>
+                                        <TouchableOpacity  onPress={this.showDatepicker}>
+                                            <Text style={{color:'white'}}>
+                                                Date
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={styles.TimePicker}>
+                                        <TouchableOpacity  onPress={this.showTimepicker}>
+                                            <Text style={{color:'white'}}>
+                                                Time
+                                            </Text>                
+                                        </TouchableOpacity>
+                                    </View>
+                                    {this.state.show && (
+                                        <DateTimePicker
+                                        testID="dateTimePicker"
+                                        value={this.state.date}
+                                        mode={this.state.mode}
+                                        is24Hour={true}
+                                        display="default"
+                                        onChange={this.onChange}
+                                        />
+                                    )}
+                                </View>
+                            </View>
+                            
+                        </View>
+                        {RecordShown}
+                        
                     
-                                 
-                </View>
-            </ScrollView>
+                    </View>
+                </ScrollView>
+            </View>
         );
     }
 }
@@ -572,6 +588,13 @@ const styles = StyleSheet.create({
     },
     BackgroundImage:{
         height:Dimensions.get("screen").height,
+        width:Dimensions.get("screen").width,
+        //resizeMode:'stretch',
+        position:'absolute',
+        top:Platform.OS === "android"? StatusBar.currentHeight :0,
+        left:0,
+        right:0,
+        bottom:0
     },
     blurContainer: {
         flex: 1,
