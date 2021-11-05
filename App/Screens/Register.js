@@ -21,7 +21,7 @@ export default class Register extends Component {
         var Password=this.state.Password;
 
         if (Username.length==0||Password.length==0){
-            alert ('Required feild is missing');
+            alert ('Required field is missing');
         }
         else{
             var InsertAPIURL='http://10.0.2.2:80/api/insert.php';
